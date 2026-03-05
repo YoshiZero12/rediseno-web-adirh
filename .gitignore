@@ -1,8 +1,9 @@
 # Ignorar todo por defecto
 *
 
-# Excepciones: solo incluir estos archivos/carpetas
-!adirh.html
+# Excepciones
+!index.html
 !fonts/
 !fonts/**
 !.gitignore
+!README.md
