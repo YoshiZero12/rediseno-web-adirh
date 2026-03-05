@@ -1,7 +1,7 @@
 # ADIRH — Rediseño Web
 **Administradora Integral de Recursos Humanos**
 
-🌐 **Sitio Web en vivo (copiar y pegar la url en otra ventana para su correcta visualización):** [https://yoshizero12.github.io/rediseno-web-adirh/](https://yoshizero12.github.io/rediseno-web-adirh/)
+🌐 **Sitio Web en vivo (si no se ve correctamente copiar y pegar la url en otra ventana para su correcta visualización):** [https://yoshizero12.github.io/rediseno-web-adirh/](https://yoshizero12.github.io/rediseno-web-adirh/)
 
 ---
 
@@ -34,5 +34,7 @@ rediseno-web-adirh/
 
 ## Autor
 **Yoshiro Pablo Armando Riaño Ishiwara**
+Ingeniería en Desarrollo y Gestión de Software
+Grupo 7IDS3
 Séptimo Cuatrimestre — Enero–Abril 2026
 Profesor: Jonathan Atlitec Mejía
