@@ -1,7 +1,7 @@
 # ADIRH — Rediseño Web
 **Administradora Integral de Recursos Humanos**
 
-🌐 **Sitio en vivo:** [https://yoshizero12.github.io/rediseno-web-adirh/](https://yoshizero12.github.io/rediseno-web-adirh/)
+🌐 **Sitio Web en vivo (copiar y pegar la url en otra ventana para su correcta visualización):** [https://yoshizero12.github.io/rediseno-web-adirh/](https://yoshizero12.github.io/rediseno-web-adirh/)
 
 ---
 
