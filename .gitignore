@@ -1,0 +1,8 @@
+# Ignorar todo por defecto
+*
+
+# Excepciones: solo incluir estos archivos/carpetas
+!adirh.html
+!fonts/
+!fonts/**
+!.gitignore

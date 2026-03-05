@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADIRH — Administradora Integral de Recursos Humanos</title>
+  
+  <style>
+    /* ---- WALLINGTON PRO — fuente local ---- */
+    /* Ajusta los nombres de archivo según los que tengas descargados  */
+    @font-face {
+      font-family: 'Wallington Pro';
+      src: url('fonts/Wallington-Pro.ttf') format('truetype');
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Montserrat';
+      src: url('fonts/Montserrat-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <style>
+    /* =============================================
+       CSS VARIABLES — GUÍA DE ESTILO ADIRH
+    ============================================= */
+    :root {
+      --azul-oscuro:  #1E3A5F;
+      --azul-medio:   #2E5C8A;
+      --dorado:       #D4AF37;
+      --dorado-hover: #C19A2E;
+      --gris-oscuro:  #2C2C2C;
+      --gris-claro:   #F5F5F5;
+      --blanco:       #FFFFFF;
+
+      --font-titulo: 'Wallington Pro', serif;
+      --font-cuerpo: 'Montserrat', sans-serif;
+
+      --spacing-base:     8px;
+      --spacing-sm:       16px;
+      --spacing-md:       32px;
+      --spacing-lg:       80px;
+      --margin-desktop:   120px;
+
+      --radius-btn:   8px;
+      --radius-card:  12px;
+      --shadow-card:  0 4px 24px rgba(30,58,95,0.10);
+      --shadow-hover: 0 8px 40px rgba(30,58,95,0.18);
+      --transition:   0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-cuerpo);
+      color: var(--gris-oscuro);
+      background: var(--blanco);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+
+    /* =============================================
+       UTILITY
+    ============================================= */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--margin-desktop);
+    }
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+    }
+    .section-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dorado);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .section-title {
+      font-family: var(--font-titulo);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      color: var(--azul-oscuro);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      color: #5a6a7a;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+    .gold-line {
+      width: 48px;
+      height: 3px;
+      background: var(--dorado);
+      margin-bottom: 24px;
+      border-radius: 2px;
+    }
+    /* BUTTONS */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--dorado);
+      color: var(--blanco);
+      font-family: var(--font-cuerpo);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 16px 32px;
+      border-radius: var(--radius-btn);
+      border: none;
+      cursor: pointer;
+      transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+    }
+    .btn-primary:hover {
+      background: var(--dorado-hover);
+      box-shadow: 0 6px 20px rgba(212,175,55,0.35);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--azul-oscuro);
+      font-family: var(--font-cuerpo);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 30px;
+      border-radius: var(--radius-btn);
+      border: 2px solid var(--azul-oscuro);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-secondary:hover {
+      background: var(--azul-oscuro);
+      color: var(--blanco);
+    }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--blanco);
+      font-family: var(--font-cuerpo);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 30px;
+      border-radius: var(--radius-btn);
+      border: 2px solid rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: white;
+    }
+
+    /* =============================================
+       NAVIGATION
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(30,58,95,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212,175,55,0.2);
+      transition: box-shadow var(--transition);
+    }
+    nav.scrolled {
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      padding: 0 var(--margin-desktop);
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 38px; height: 38px;
+      background: var(--dorado);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon svg { width: 22px; height: 22px; }
+    .logo-text {
+      font-family: var(--font-titulo);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blanco);
+      letter-spacing: 1px;
+    }
+    .logo-sub {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--dorado);
+      margin-top: -2px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.8);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: all var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--blanco);
+      background: rgba(255,255,255,0.08);
+    }
+    .nav-cta {
+      background: var(--dorado) !important;
+      color: var(--blanco) !important;
+      font-weight: 600 !important;
+      padding: 8px 18px !important;
+    }
+    .nav-cta:hover { background: var(--dorado-hover) !important; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      width: 24px; height: 2px;
+      background: white;
+      border-radius: 2px;
+      transition: all var(--transition);
+    }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-inner { padding: 0 24px; }
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 72px; left: 0; right: 0;
+      background: var(--azul-oscuro);
+      padding: 16px 24px 24px;
+      z-index: 999;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: rgba(255,255,255,0.85);
+      font-size: 15px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: all var(--transition);
+    }
+    .mobile-menu a:hover { background: rgba(255,255,255,0.08); color: white; }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    #inicio {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d1f35 0%, #1E3A5F 45%, #2E5C8A 100%);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 72px;
+    }
+    .hero-bg-pattern {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .hero-bg-pattern::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);
+    }
+    .hero-bg-pattern::after {
+      content: '';
+      position: absolute;
+      bottom: -150px; left: -100px;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,92,138,0.3) 0%, transparent 70%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 48px; text-align: center; }
+    }
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212,175,55,0.15);
+      border: 1px solid rgba(212,175,55,0.3);
+      color: var(--dorado);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+    }
+    .hero-label span { width: 6px; height: 6px; background: var(--dorado); border-radius: 50%; }
+    .hero-title {
+      font-family: var(--font-titulo);
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 700;
+      color: var(--blanco);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--dorado);
+    }
+    .hero-desc {
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 500px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      font-family: var(--font-titulo);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--dorado);
+      line-height: 1;
+    }
+    .stat-label { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 4px; letter-spacing: 0.5px; }
+    .hero-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px;
+      backdrop-filter: blur(8px);
+      position: relative;
+    }
+    .hero-card-title {
+      font-family: var(--font-titulo);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--blanco);
+      margin-bottom: 24px;
+    }
+    .hero-service-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .hero-service-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.06);
+      padding: 14px 16px;
+      border-radius: 10px;
+      transition: background var(--transition);
+    }
+    .hero-service-item:hover { background: rgba(212,175,55,0.12); }
+    .hero-service-icon {
+      width: 36px; height: 36px;
+      background: rgba(212,175,55,0.2);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .hero-service-icon svg { width: 18px; height: 18px; stroke: var(--dorado); fill: none; }
+    .hero-service-text { font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+    /* =============================================
+       SECTION BASE
+    ============================================= */
+    section { padding: var(--spacing-lg) 0; }
+    .section-header { margin-bottom: 56px; }
+    .section-header.centered { text-align: center; }
+    .section-header.centered .gold-line { margin: 0 auto 24px; }
+    .section-header.centered .section-subtitle { margin: 0 auto; }
+
+    /* =============================================
+       SERVICIOS
+    ============================================= */
+    #servicios { background: var(--gris-claro); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 900px) { .services-grid { grid-template-columns: 1fr; } }
+    @media (min-width: 600px) and (max-width: 900px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+    .service-card {
+      background: var(--blanco);
+      border-radius: var(--radius-card);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow-card);
+      transition: box-shadow var(--transition), transform var(--transition);
+      cursor: pointer;
+      border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--dorado), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .service-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-4px);
+      border-color: rgba(212,175,55,0.2);
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon-wrap {
+      width: 56px; height: 56px;
+      background: rgba(30,58,95,0.08);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .service-icon-wrap svg { width: 26px; height: 26px; stroke: var(--azul-oscuro); fill: none; stroke-width: 2; }
+    .service-card h3 {
+      font-family: var(--font-titulo);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--azul-oscuro);
+      margin-bottom: 10px;
+    }
+    .service-card p { font-size: 14px; color: #5a6a7a; line-height: 1.7; margin-bottom: 16px; }
+    .service-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .service-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--gris-oscuro);
+    }
+    .service-item::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--dorado);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .service-link {
+      font-size: 13px; font-weight: 600;
+      color: var(--azul-medio);
+      display: flex; align-items: center; gap: 4px;
+      transition: gap var(--transition), color var(--transition);
+    }
+    .service-link:hover { gap: 8px; color: var(--azul-oscuro); }
+
+    /* =============================================
+       METODOLOGÍA
+    ============================================= */
+    #metodologia { background: var(--blanco); }
+    .method-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    @media (max-width: 900px) { .method-grid { grid-template-columns: 1fr; gap: 40px; } }
+    .method-steps { display: flex; flex-direction: column; gap: 8px; }
+    .method-step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 16px;
+      padding: 20px;
+      border-radius: 12px;
+      transition: background var(--transition);
+      cursor: default;
+    }
+    .method-step:hover { background: var(--gris-claro); }
+    .step-num {
+      width: 48px; height: 48px;
+      background: var(--azul-oscuro);
+      color: var(--blanco);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-titulo);
+      font-size: 20px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-content h4 { font-size: 16px; font-weight: 600; color: var(--azul-oscuro); margin-bottom: 4px; }
+    .step-content p { font-size: 13px; color: #5a6a7a; line-height: 1.6; }
+    .method-benefits {
+      background: linear-gradient(135deg, var(--azul-oscuro) 0%, #2E5C8A 100%);
+      border-radius: 20px;
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .method-benefits::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.08);
+    }
+    .method-benefits h3 {
+      font-family: var(--font-titulo);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--blanco);
+      margin-bottom: 8px;
+    }
+    .method-benefits > p { font-size: 14px; color: rgba(255,255,255,0.65); margin-bottom: 32px; }
+    .benefit-list { display: flex; flex-direction: column; gap: 16px; }
+    .benefit-item {
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .benefit-icon {
+      width: 36px; height: 36px;
+      background: rgba(212,175,55,0.2);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .benefit-icon svg { width: 18px; height: 18px; stroke: var(--dorado); fill: none; stroke-width: 2; }
+    .benefit-text h5 { font-size: 14px; font-weight: 600; color: var(--blanco); margin-bottom: 2px; }
+    .benefit-text p { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+
+    /* =============================================
+       EQUIPO
+    ============================================= */
+    #equipo { background: var(--gris-claro); }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 900px) { .team-grid { grid-template-columns: 1fr; } }
+    @media (min-width: 600px) and (max-width: 900px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+    .team-card {
+      background: var(--blanco);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .team-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+    .team-avatar {
+      height: 200px;
+      background: linear-gradient(135deg, var(--azul-oscuro), var(--azul-medio));
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .team-avatar-icon {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 3px solid rgba(212,175,55,0.4);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .team-avatar-icon svg { width: 40px; height: 40px; stroke: white; fill: none; stroke-width: 1.5; }
+    .team-badge {
+      position: absolute;
+      bottom: 16px; right: 16px;
+      background: var(--dorado);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+    .team-info { padding: 24px; }
+    .team-info h3 { font-size: 18px; font-weight: 600; color: var(--azul-oscuro); margin-bottom: 4px; }
+    .team-role { font-size: 12px; font-weight: 600; color: var(--dorado); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .team-info p { font-size: 13px; color: #5a6a7a; line-height: 1.6; }
+
+    /* =============================================
+       CASOS DE ÉXITO
+    ============================================= */
+    #casos { background: var(--blanco); }
+    .casos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 900px) { .casos-grid { grid-template-columns: 1fr; } }
+    @media (min-width: 600px) and (max-width: 900px) { .casos-grid { grid-template-columns: repeat(2, 1fr); } }
+    .caso-card {
+      background: var(--blanco);
+      border: 1px solid #e8ecf0;
+      border-radius: var(--radius-card);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow-card);
+      transition: all var(--transition);
+      position: relative;
+    }
+    .caso-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: rgba(212,175,55,0.3); }
+    .caso-badge {
+      display: inline-block;
+      background: rgba(30,58,95,0.08);
+      color: var(--azul-oscuro);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+    .caso-card h3 { font-family: var(--font-titulo); font-size: 22px; font-weight: 700; color: var(--azul-oscuro); margin-bottom: 6px; }
+    .caso-servicio { font-size: 12px; color: var(--dorado); font-weight: 600; margin-bottom: 16px; }
+    .caso-card p { font-size: 14px; color: #5a6a7a; line-height: 1.7; margin-bottom: 20px; }
+    .caso-result {
+      background: var(--gris-claro);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .caso-result-num { font-family: var(--font-titulo); font-size: 28px; font-weight: 700; color: var(--dorado); line-height: 1; }
+    .caso-result-text { font-size: 12px; color: #5a6a7a; line-height: 1.4; }
+    /* Testimonial */
+    .testimonials {
+      margin-top: 56px;
+      background: var(--gris-claro);
+      border-radius: 20px;
+      padding: 48px;
+      position: relative;
+    }
+    .testimonial-quote {
+      font-family: var(--font-titulo);
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 600;
+      color: var(--azul-oscuro);
+      line-height: 1.4;
+      margin-bottom: 24px;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 24px;
+    }
+    .testimonial-author { text-align: center; font-size: 13px; color: #5a6a7a; }
+    .testimonial-author strong { color: var(--azul-oscuro); font-weight: 600; }
+
+    /* =============================================
+       CTA BANNER
+    ============================================= */
+    #cta-banner {
+      background: linear-gradient(135deg, var(--azul-oscuro) 0%, #1a4f80 100%);
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    #cta-banner::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.06);
+    }
+    .cta-inner { text-align: center; position: relative; }
+    .cta-inner h2 {
+      font-family: var(--font-titulo);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      color: var(--blanco);
+      margin-bottom: 12px;
+    }
+    .cta-inner p { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 36px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* =============================================
+       CONTACTO
+    ============================================= */
+    #contacto { background: var(--gris-claro); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 64px;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; gap: 40px; } }
+    .contact-info { display: flex; flex-direction: column; gap: 0; }
+    .contact-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid #dde3ea;
+    }
+    .contact-item:last-child { border-bottom: none; }
+    .contact-icon {
+      width: 44px; height: 44px;
+      background: var(--azul-oscuro);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-icon svg { width: 20px; height: 20px; stroke: white; fill: none; stroke-width: 2; }
+    .contact-item-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dorado); margin-bottom: 4px; }
+    .contact-item-value { font-size: 15px; color: var(--gris-oscuro); font-weight: 500; }
+    .contact-item-sub { font-size: 12px; color: #8a9aaa; margin-top: 2px; }
+    .whatsapp-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #25D366;
+      color: white;
+      font-size: 14px; font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 8px;
+      margin-top: 20px;
+      transition: all var(--transition);
+    }
+    .whatsapp-btn:hover { background: #1ebe5c; box-shadow: 0 4px 16px rgba(37,211,102,0.3); }
+    /* FORM */
+    .contact-form {
+      background: var(--blanco);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: var(--shadow-card);
+    }
+    .contact-form h3 {
+      font-family: var(--font-titulo);
+      font-size: 24px; font-weight: 700;
+      color: var(--azul-oscuro);
+      margin-bottom: 24px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--azul-oscuro); letter-spacing: 0.5px; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      font-family: var(--font-cuerpo);
+      font-size: 14px;
+      color: var(--gris-oscuro);
+      background: var(--blanco);
+      border: 1.5px solid #dde3ea;
+      border-radius: 8px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--azul-medio);
+      box-shadow: 0 0 0 3px rgba(46,92,138,0.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-submit { width: 100%; padding: 16px; justify-content: center; font-size: 15px; }
+    .form-note { font-size: 11px; color: #8a9aaa; text-align: center; margin-top: 12px; }
+    /* Snackbar */
+    #snackbar {
+      display: none;
+      position: fixed;
+      bottom: 32px; left: 50%; transform: translateX(-50%);
+      background: var(--azul-oscuro);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 14px; font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      z-index: 9999;
+      white-space: nowrap;
+    }
+    #snackbar.show { display: block; animation: snackIn 0.3s ease; }
+    @keyframes snackIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: #0d1f35;
+      color: rgba(255,255,255,0.7);
+      padding: 64px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .footer-grid { grid-template-columns: 1fr; } }
+    .footer-brand .logo-text { color: white; font-size: 20px; }
+    .footer-brand p { font-size: 13px; line-height: 1.8; margin-top: 12px; max-width: 280px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--dorado); margin-bottom: 16px; }
+    .footer-col ul { display: flex; flex-direction: column; gap: 8px; }
+    .footer-col li a { font-size: 13px; color: rgba(255,255,255,0.6); transition: color var(--transition); }
+    .footer-col li a:hover { color: var(--dorado); }
+    .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin-bottom: 24px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.4); }
+    .footer-wcag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; color: rgba(255,255,255,0.4);
+    }
+    .footer-wcag svg { width: 14px; height: 14px; stroke: var(--dorado); fill: none; }
+
+    /* =============================================
+       ANIMATIONS
+    ============================================= */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up:nth-child(2) { transition-delay: 0.1s; }
+    .fade-up:nth-child(3) { transition-delay: 0.2s; }
+    .fade-up:nth-child(4) { transition-delay: 0.3s; }
+    .fade-up:nth-child(5) { transition-delay: 0.4s; }
+    .fade-up:nth-child(6) { transition-delay: 0.5s; }
+
+    /* HERO ENTRANCE */
+    .hero-content { animation: heroIn 0.9s cubic-bezier(.4,0,.2,1) both; }
+    .hero-visual { animation: heroIn 0.9s 0.2s cubic-bezier(.4,0,.2,1) both; }
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          <path d="M18 3l1.5 1.5M20 7h2M18 11l1.5-1.5"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">ADIRH</div>
+        <div class="logo-sub">Ingenio transformado en talento</div>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#metodologia">Metodología</a></li>
+      <li><a href="#equipo">Equipo</a></li>
+      <li><a href="#casos">Casos de Éxito</a></li>
+      <li><a href="#contacto" class="nav-cta">Cotizar ahora</a></li>
+    </ul>
+    <div class="nav-hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#inicio" onclick="closeMenu()">Inicio</a>
+  <a href="#servicios" onclick="closeMenu()">Servicios</a>
+  <a href="#metodologia" onclick="closeMenu()">Metodología</a>
+  <a href="#equipo" onclick="closeMenu()">Nuestro Equipo</a>
+  <a href="#casos" onclick="closeMenu()">Casos de Éxito</a>
+  <a href="#contacto" onclick="closeMenu()">Contacto</a>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section id="inicio">
+  <div class="hero-bg-pattern"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-label"><span></span> Consultoría de Recursos Humanos</div>
+        <h1 class="hero-title">
+          Transformamos tu empresa con <em>talento inteligente</em>
+        </h1>
+        <p class="hero-desc">
+          Somos especialistas en Recursos Humanos, Administración y Finanzas. 
+          Ayudamos a PyMEs y emprendedores a crecer con cumplimiento legal, nómina precisa y equipos de alto rendimiento.
+        </p>
+        <div class="hero-actions">
+          <a href="#contacto" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            Solicita tu cotización
+          </a>
+          <a href="#servicios" class="btn-ghost">Conocer servicios</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">+200</div>
+            <div class="stat-label">Empresas atendidas</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">98%</div>
+            <div class="stat-label">Tasa de satisfacción</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">10+</div>
+            <div class="stat-label">Años de experiencia</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-title">Nuestros servicios principales</div>
+          <div class="hero-service-list">
+            <div class="hero-service-item">
+              <div class="hero-service-icon">
+                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+              </div>
+              <div class="hero-service-text">Recursos Humanos & Nómina</div>
+            </div>
+            <div class="hero-service-item">
+              <div class="hero-service-icon">
+                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </div>
+              <div class="hero-service-text">Administración Empresarial</div>
+            </div>
+            <div class="hero-service-item">
+              <div class="hero-service-icon">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+              </div>
+              <div class="hero-service-text">Finanzas & Contabilidad</div>
+            </div>
+            <div class="hero-service-item">
+              <div class="hero-service-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              </div>
+              <div class="hero-service-text">Cumplimiento IMSS & INFONAVIT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SERVICIOS ===================== -->
+<section id="servicios">
+  <div class="container">
+    <div class="section-header centered">
+      <span class="section-tag">Lo que ofrecemos</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Servicios diseñados para tu empresa</h2>
+      <p class="section-subtitle">Soluciones integrales de recursos humanos para que tú te concentres en hacer crecer tu negocio.</p>
+    </div>
+    <div class="services-grid">
+
+      <div class="service-card fade-up">
+        <div class="service-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3>Recursos Humanos</h3>
+        <p>Gestión integral del capital humano: reclutamiento, contratación, nómina y cumplimiento legal ante las autoridades laborales.</p>
+        <div class="service-items">
+          <div class="service-item">Nómina y dispersión de pagos</div>
+          <div class="service-item">Altas y bajas ante IMSS</div>
+          <div class="service-item">Contratos laborales y finiquitos</div>
+          <div class="service-item">Gestión de aportaciones INFONAVIT</div>
+        </div>
+        <a href="#contacto" class="service-link">
+          Solicitar información
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="service-card fade-up">
+        <div class="service-icon-wrap">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Administración</h3>
+        <p>Optimización de procesos administrativos y organizacionales para mejorar la eficiencia y reducir costos operativos.</p>
+        <div class="service-items">
+          <div class="service-item">Estructura organizacional</div>
+          <div class="service-item">Políticas y manuales internos</div>
+          <div class="service-item">Control de contratos y prestadores</div>
+          <div class="service-item">Reducción de cargas administrativas</div>
+        </div>
+        <a href="#contacto" class="service-link">
+          Solicitar información
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="service-card fade-up">
+        <div class="service-icon-wrap">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <h3>Finanzas</h3>
+        <p>Asesoría financiera especializada para PyMEs: control de gastos, planeación fiscal y formalización contable.</p>
+        <div class="service-items">
+          <div class="service-item">Contabilidad y estados financieros</div>
+          <div class="service-item">Planeación fiscal y SAT</div>
+          <div class="service-item">Formalización de negocios</div>
+          <div class="service-item">Asesoría en inversión y presupuesto</div>
+        </div>
+        <a href="#contacto" class="service-link">
+          Solicitar información
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== METODOLOGÍA ===================== -->
+<section id="metodologia">
+  <div class="container">
+    <div class="method-grid">
+      <div>
+        <span class="section-tag">Cómo trabajamos</span>
+        <div class="gold-line"></div>
+        <h2 class="section-title">Metodología clara y transparente</h2>
+        <p class="section-subtitle" style="margin-bottom: 40px;">Sin tecnicismos ni costos ocultos. Te acompañamos en cada paso con un proceso probado.</p>
+        <div class="method-steps">
+          <div class="method-step fade-up">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Diagnóstico inicial</h4>
+              <p>Analizamos el estado actual de tu empresa: nómina, contratos, cumplimiento legal y procesos administrativos.</p>
+            </div>
+          </div>
+          <div class="method-step fade-up">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Propuesta personalizada</h4>
+              <p>Diseñamos un plan de trabajo específico para tus necesidades, con tiempos definidos y costos transparentes.</p>
+            </div>
+          </div>
+          <div class="method-step fade-up">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Implementación y seguimiento</h4>
+              <p>Ejecutamos los procesos acordados y te mantenemos informado con reportes claros y comunicación constante.</p>
+            </div>
+          </div>
+          <div class="method-step fade-up">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Resultados medibles</h4>
+              <p>Entregamos indicadores concretos del impacto generado en tu empresa: ahorro, cumplimiento y eficiencia.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="method-benefits fade-up">
+        <h3>¿Por qué elegir ADIRH?</h3>
+        <p>Más de 10 años acompañando el crecimiento de PyMEs mexicanas.</p>
+        <div class="benefit-list">
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            </div>
+            <div class="benefit-text">
+              <h5>Cumplimiento garantizado</h5>
+              <p>Evitamos multas y sanciones ante IMSS, INFONAVIT y SAT.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="benefit-text">
+              <h5>Atención personalizada</h5>
+              <p>Un consultor dedicado a tu empresa, con disponibilidad directa.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <div class="benefit-text">
+              <h5>Sin costos ocultos</h5>
+              <p>Propuesta clara antes de iniciar. Sabes exactamente qué pagas.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="benefit-text">
+              <h5>Experiencia comprobable</h5>
+              <p>Casos de éxito reales con resultados medibles y referencias disponibles.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EQUIPO ===================== -->
+<section id="equipo">
+  <div class="container">
+    <div class="section-header centered">
+      <span class="section-tag">Nuestro equipo</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Profesionales con experiencia comprobable</h2>
+      <p class="section-subtitle">Conoce a los especialistas que trabajan para hacer crecer tu empresa.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card fade-up">
+        <div class="team-avatar">
+          <div class="team-avatar-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="team-badge">Director</span>
+        </div>
+        <div class="team-info">
+          <h3>Lic. Roberto Flores</h3>
+          <div class="team-role">Director General</div>
+          <p>Especialista en legislación laboral con más de 15 años de experiencia asesorando PyMEs en cumplimiento ante el IMSS e INFONAVIT.</p>
+        </div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="team-avatar">
+          <div class="team-avatar-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="team-badge">RRHH</span>
+        </div>
+        <div class="team-info">
+          <h3>Mtra. Claudia Vargas</h3>
+          <div class="team-role">Coordinadora de RRHH</div>
+          <p>Maestría en Gestión del Talento Humano. Experta en reclutamiento, nómina y desarrollo organizacional para empresas en crecimiento.</p>
+        </div>
+      </div>
+      <div class="team-card fade-up">
+        <div class="team-avatar">
+          <div class="team-avatar-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="team-badge">Finanzas</span>
+        </div>
+        <div class="team-info">
+          <h3>C.P. Marco Elizondo</h3>
+          <div class="team-role">Contador & Asesor Fiscal</div>
+          <p>Contador Público con especialidad en fiscalidad para PyMEs. Responsable de planeación fiscal, contabilidad y cumplimiento ante el SAT.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CASOS DE ÉXITO ===================== -->
+<section id="casos">
+  <div class="container">
+    <div class="section-header centered">
+      <span class="section-tag">Casos de éxito</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Empresas que ya confían en nosotros</h2>
+      <p class="section-subtitle">Resultados reales que demuestran nuestra metodología en acción.</p>
+    </div>
+    <div class="casos-grid">
+      <div class="caso-card fade-up">
+        <span class="caso-badge">Manufactura</span>
+        <h3>PyME Textiles Norte</h3>
+        <div class="caso-servicio">Servicio: Recursos Humanos</div>
+        <p>Empresa con 45 trabajadores que enfrentaba errores frecuentes en el cálculo de nómina y atrasos en las aportaciones al IMSS, generando riesgo de multas.</p>
+        <div class="caso-result">
+          <div class="caso-result-num">40%</div>
+          <div class="caso-result-text">Reducción de errores en nómina<br><strong>en los primeros 3 meses</strong></div>
+        </div>
+      </div>
+      <div class="caso-card fade-up">
+        <span class="caso-badge">Logística</span>
+        <h3>Grupo Logística Sur</h3>
+        <div class="caso-servicio">Servicio: Administración</div>
+        <p>Empresa de distribución con procesos administrativos desorganizados. Los contratos con proveedores no tenían control y los gastos operativos superaban lo presupuestado.</p>
+        <div class="caso-result">
+          <div class="caso-result-num">25%</div>
+          <div class="caso-result-text">Ahorro en costos operativos<br><strong>con estructura optimizada</strong></div>
+        </div>
+      </div>
+      <div class="caso-card fade-up">
+        <span class="caso-badge">Startup</span>
+        <h3>StartUp TechMex</h3>
+        <div class="caso-servicio">Servicio: Finanzas</div>
+        <p>Emprendedora con un negocio tecnológico en crecimiento que necesitaba formalizar su operación, registrarse ante el SAT y establecer una estructura contable clara.</p>
+        <div class="caso-result">
+          <div class="caso-result-num">6 sem</div>
+          <div class="caso-result-text">Formalización completa<br><strong>y cumplimiento fiscal al día</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonials fade-up">
+      <p class="testimonial-quote">
+        "ADIRH nos explicó todo de forma clara, sin tecnicismos. Por primera vez sentí que una consultoría realmente se preocupaba por mi empresa y no solo por cobrar."
+      </p>
+      <div class="testimonial-author">— <strong>Carlos Ramírez</strong>, Dueño de PyME, Estado de México</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA BANNER ===================== -->
+<section id="cta-banner">
+  <div class="container">
+    <div class="cta-inner">
+      <span class="section-tag" style="justify-content:center;display:flex;margin-bottom:12px;">¿Tu empresa puede ser el siguiente caso?</span>
+      <h2>Hablemos sobre cómo podemos ayudarte</h2>
+      <p>Sin compromiso. Primera consulta sin costo. Respuesta en menos de 24 horas.</p>
+      <div class="cta-actions">
+        <a href="#contacto" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          Solicita tu cotización aquí
+        </a>
+        <a href="https://wa.me/5559134294" class="btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Escribir por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACTO ===================== -->
+<section id="contacto">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Contáctanos</span>
+      <div class="gold-line"></div>
+      <h2 class="section-title">Estamos listos para ayudarte</h2>
+      <p class="section-subtitle">Cuéntanos sobre tu empresa y en menos de 24 horas te enviamos una propuesta personalizada.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Teléfono</div>
+            <div class="contact-item-value">55 9134 5294</div>
+            <div class="contact-item-sub">Lun – Vie, 9:00 a 18:00 hrs</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Correo electrónico</div>
+            <div class="contact-item-value"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="62010d0c160301160d2203060b100a4c010d0f4c0f1a">[email&#160;protected]</a></div>
+            <div class="contact-item-sub">Respuesta en menos de 24 hrs</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="contact-item-label">Dirección</div>
+            <div class="contact-item-value">Benito Juárez Lt.10, Tecámac</div>
+            <div class="contact-item-sub">Ampliación Ozumbilla, Estado de México, CP 55766</div>
+          </div>
+        </div>
+        <a href="https://wa.me/5559134294" class="whatsapp-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          Contactar por WhatsApp
+        </a>
+      </div>
+
+      <div class="contact-form">
+        <h3>Solicita tu cotización aquí</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombre">Nombre completo *</label>
+            <input type="text" id="nombre" placeholder="Tu nombre"/>
+          </div>
+          <div class="form-group">
+            <label for="empresa">Empresa (opcional)</label>
+            <input type="text" id="empresa" placeholder="Nombre de tu empresa"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Correo electrónico *</label>
+            <input type="email" id="email" placeholder="tu@correo.com"/>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" placeholder="55 0000 0000"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="servicio">Servicio de interés *</label>
+          <select id="servicio">
+            <option value="">Selecciona un servicio…</option>
+            <option>Recursos Humanos y Nómina</option>
+            <option>Cumplimiento IMSS / INFONAVIT</option>
+            <option>Administración empresarial</option>
+            <option>Finanzas y Contabilidad</option>
+            <option>Formalización de negocio (SAT)</option>
+            <option>Asesoría integral</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="mensaje">Mensaje</label>
+          <textarea id="mensaje" placeholder="Cuéntanos brevemente sobre tu empresa y lo que necesitas…"></textarea>
+        </div>
+        <button class="btn-primary form-submit" onclick="submitForm()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar mensaje
+        </button>
+        <p class="form-note">Al enviar aceptas que ADIRH te contacte para darte seguimiento. Datos tratados con confidencialidad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+              <path d="M18 3l1.5 1.5M20 7h2M18 11l1.5-1.5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="logo-text">ADIRH</div>
+            <div class="logo-sub" style="color:rgba(212,175,55,0.7)">Ingenio transformado en talento</div>
+          </div>
+        </div>
+        <p>Administradora Integral de Recursos Humanos S.A. de C.V. Especialistas en RRHH, Administración y Finanzas para PyMEs mexicanas.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#metodologia">Metodología</a></li>
+          <li><a href="#equipo">Nuestro Equipo</a></li>
+          <li><a href="#casos">Casos de Éxito</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href="#servicios">Recursos Humanos</a></li>
+          <li><a href="#servicios">Nómina & IMSS</a></li>
+          <li><a href="#servicios">INFONAVIT</a></li>
+          <li><a href="#servicios">Administración</a></li>
+          <li><a href="#servicios">Finanzas & SAT</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul>
+          <li><a href="tel:5559134294">55 9134 5294</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#1d7e7273697c7e69725d7c79746f75337e7270337065"><span class="__cf_email__" data-cfemail="aecdc1c0dacfcddac1eecfcac7dcc680cdc1c380c3d6">[email&#160;protected]</span></a></li>
+          <li><a href="#contacto">Tecámac, Estado de México</a></li>
+          <li><a href="http://www.adirh.com.mx">www.adirh.com.mx</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer-divider"/>
+    <div class="footer-bottom">
+      <p>© 2026 ADIRH — Administradora Integral de Recursos Humanos S.A. de C.V. Todos los derechos reservados.</p>
+      <span class="footer-wcag">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        WCAG 2.1 AA
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== SNACKBAR ===================== -->
+<div id="snackbar">✓ Tu cotización fue enviada correctamente. Te contactaremos pronto.</div>
+
+<!-- ===================== JS ===================== -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // NAV scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+  // Intersection Observer for fade-up
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // Form submission
+  function submitForm() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const servicio = document.getElementById('servicio').value;
+    if (!nombre || !email || !servicio) {
+      alert('Por favor completa los campos obligatorios: nombre, correo y servicio de interés.');
+      return;
+    
