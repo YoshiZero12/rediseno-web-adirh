@@ -7,7 +7,6 @@
   
   <style>
     /* ---- WALLINGTON PRO — fuente local ---- */
-    /* Ajusta los nombres de archivo según los que tengas descargados  */
     @font-face {
       font-family: 'Wallington Pro';
       src: url('fonts/Wallington-Pro.ttf') format('truetype');
@@ -1416,12 +1415,7 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="nav-logo">
-          <div class="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-              <path d="M18 3l1.5 1.5M20 7h2M18 11l1.5-1.5"/>
-            </svg>
-          </div>
+          <img src="img/LogoS-adrih.png" alt="ADIRH" style="width:44px;height:44px;object-fit:contain;" />
           <div>
             <div class="logo-text">ADIRH</div>
             <div class="logo-sub" style="color:rgba(212,175,55,0.7)">Ingenio transformado en talento</div>
@@ -1523,25 +1517,24 @@
         alert('Por favor completa los campos obligatorios: nombre, correo y servicio de interés.');
         return;
       }
-      const mensaje = document.getElementById('mensaje').value.trim();
       const empresa = document.getElementById('empresa').value.trim();
       const telefono = document.getElementById('telefono').value.trim();
+      const mensaje = document.getElementById('mensaje').value.trim();
       
-      // Aquí puedes enviar los datos a un servidor o servicio de email
+      // Aquí iría la lógica de envío (EmailJS, Formspree, etc.)
       console.log({ nombre, email, empresa, telefono, servicio, mensaje });
       
       // Mostrar snackbar
       const snackbar = document.getElementById('snackbar');
       snackbar.classList.add('show');
-      setTimeout(() => snackbar.classList.remove('show'), 4000);
+      setTimeout(() => snackbar.classList.remove('show'), 3000);
       
       // Limpiar formulario
       document.getElementById('nombre').value = '';
-      document.getElementById('email').value = '';
       document.getElementById('empresa').value = '';
+      document.getElementById('email').value = '';
       document.getElementById('telefono').value = '';
       document.getElementById('servicio').value = '';
       document.getElementById('mensaje').value = '';
     }
   </script>
-    
